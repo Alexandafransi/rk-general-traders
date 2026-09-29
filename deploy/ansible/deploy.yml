@@ -1,0 +1,72 @@
+# Deploys rk-general-traders (Next.js frontend) to the shared droplet.
+#
+# The droplet's Traefik reverse proxy and "proxy" docker network are owned
+# by other apps' deploys; this playbook only assumes they exist. The backend
+# must already be running as the "rk-backend" container on the proxy network
+# (see rk-general-traders-backend's deploy) — this app proxies /api, /admin
+# and /static to it at runtime.
+#
+# Required -e vars (the CI workflow passes all of them):
+#   image, ghcr_user, ghcr_token, domain
+- name: Deploy rk-general-traders frontend
+  hosts: production
+  vars:
+    app_dir: /opt/rk-general-traders-frontend
+    app_domain: "{{ domain | default('rk.kezmak.co.tz') }}"
+
+  tasks:
+    - name: Ensure shared proxy network exists
+      ansible.builtin.shell: >
+        docker network inspect proxy >/dev/null 2>&1
+        || docker network create proxy
+      register: proxy_net
+      changed_when: proxy_net.stdout == ""
+
+    - name: Ensure app directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Write environment file
+      ansible.builtin.copy:
+        content: |
+          IMAGE={{ image }}
+          BACKEND_INTERNAL_URL=http://rk-backend:8000
+        dest: "{{ app_dir }}/.env"
+        mode: "0600"
+
+    - name: Render docker-compose file
+      ansible.builtin.template:
+        src: templates/docker-compose.prod.yml.j2
+        dest: "{{ app_dir }}/docker-compose.yml"
+        mode: "0600"
+
+    - name: Log in to GitHub Container Registry
+      ansible.builtin.command:
+        cmd: docker login ghcr.io -u {{ ghcr_user }} --password-stdin
+        stdin: "{{ ghcr_token }}"
+      changed_when: false
+
+    - name: Pull the new image
+      ansible.builtin.command:
+        cmd: docker compose pull
+        chdir: "{{ app_dir }}"
+      register: pull_out
+      changed_when: "'Downloaded' in pull_out.stderr or 'Pull complete' in pull_out.stderr"
+
+    - name: Start / restart services
+      ansible.builtin.command:
+        cmd: docker compose up -d
+        chdir: "{{ app_dir }}"
+      register: up_out
+      changed_when: "'Started' in up_out.stderr or 'Created' in up_out.stderr or 'Recreated' in up_out.stderr"
+
+    - name: Wait for frontend to answer
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:3504/"
+        status_code: [200, 301, 302, 307, 308]
+      register: health
+      retries: 30
+      delay: 10
+      until: health.status in [200, 301, 302, 307, 308]

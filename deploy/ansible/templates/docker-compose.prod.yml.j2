@@ -1,0 +1,25 @@
+# Rendered by Ansible — do not edit on the server, changes will be overwritten.
+services:
+  web:
+    image: ${IMAGE}
+    restart: unless-stopped
+    environment:
+      # Single-origin proxy target — the backend container's fixed name on
+      # the shared proxy network (see rk-general-traders-backend's deploy).
+      BACKEND_INTERNAL_URL: ${BACKEND_INTERNAL_URL}
+    # Loopback only, for the deploy health check; public traffic comes
+    # through Traefik on the proxy network.
+    ports:
+      - "127.0.0.1:3504:3000"
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.rk-app.rule=Host(`{{ app_domain }}`) || Host(`www.{{ app_domain }}`)
+      - traefik.http.routers.rk-app.entrypoints=websecure
+      - traefik.http.routers.rk-app.tls.certresolver=letsencrypt
+      - traefik.http.services.rk-app.loadbalancer.server.port=3000
+
+networks:
+  proxy:
+    external: true
