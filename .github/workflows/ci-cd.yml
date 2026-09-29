@@ -52,6 +52,7 @@ jobs:
           # URL is baked into the bundle.
           build-args: |
             NEXT_PUBLIC_API_URL=
+            BACKEND_INTERNAL_URL=http://rk-backend:8000
           tags: |
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:${{ github.sha }}
