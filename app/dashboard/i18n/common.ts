@@ -18,6 +18,8 @@ export const common = {
     "common.unassigned": "— Unassigned —",
     "common.saveChanges": "Save changes",
     "common.done": "Done",
+    "common.confirm": "Confirm",
+    "common.ok": "OK",
   },
   sw: {
     "common.cancel": "Ghairi",
@@ -38,5 +40,7 @@ export const common = {
     "common.unassigned": "— Hajapangiwa —",
     "common.saveChanges": "Hifadhi Mabadiliko",
     "common.done": "Imekamilika",
+    "common.confirm": "Thibitisha",
+    "common.ok": "Sawa",
   },
 } as const;

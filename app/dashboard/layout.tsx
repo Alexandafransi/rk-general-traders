@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Icon from "./Icon";
 import { BranchProvider, useBranch } from "./branch/BranchContext";
 import { LocaleProvider, useLocale } from "./i18n/LocaleContext";
+import { ConfirmProvider } from "./ConfirmDialog";
 import { AuthProvider, useAuth } from "../lib/auth/AuthContext";
 import "./dashboard.css";
 
@@ -84,9 +85,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <AuthProvider>
       <LocaleProvider>
-        <BranchProvider>
-          <AuthGuard>{children}</AuthGuard>
-        </BranchProvider>
+        <ConfirmProvider>
+          <BranchProvider>
+            <AuthGuard>{children}</AuthGuard>
+          </BranchProvider>
+        </ConfirmProvider>
       </LocaleProvider>
     </AuthProvider>
   );
@@ -117,6 +120,20 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   const { branches, branchId, setBranchId } = useBranch();
   const { user, hasRole, can, logout } = useAuth();
   const meta = PAGE_META_KEYS[pathname] || PAGE_META_KEYS["/dashboard"];
+  const [navOpen, setNavOpen] = useState(false);
+
+  // The drawer is a mobile-only overlay: dismiss it on navigation and on Escape
+  // so it never strands the user over the page they just asked for.
+  useEffect(() => setNavOpen(false), [pathname]);
+  useEffect(() => {
+    if (!navOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setNavOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [navOpen]);
+
   function canSeeNavItem(item: NavItem) {
     if (item.href === "#") return true;
     if (item.module === SUPERADMIN_ONLY) return hasRole("superadmin");
@@ -151,7 +168,8 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="dash-root">
       <div className="dash-shell">
-        <aside className="dash-side">
+        {navOpen && <div className="dash-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />}
+        <aside className={`dash-side${navOpen ? " open" : ""}`}>
           <div className="dash-side-hd">
             <span className="dash-logo">RK</span>
             <b>RK General Traders</b>
@@ -183,6 +201,14 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
 
         <div className="dash-main">
           <header className="dash-topbar">
+            <button
+              className="dash-icon-btn dash-burger"
+              aria-label={t("nav.menu")}
+              aria-expanded={navOpen}
+              onClick={() => setNavOpen((v) => !v)}
+            >
+              <Icon name="menu" />
+            </button>
             <h1>{denied ? t("nav.accessDenied.title") : t(meta.titleKey)}</h1>
             <span className="sub">{denied ? t("nav.accessDenied.subtitle") : t(meta.subtitleKey)}</span>
             {isBranchLocked ? (

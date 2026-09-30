@@ -72,7 +72,7 @@
 .dash-root .tnum { font-variant-numeric: tabular-nums; }
 .dash-root .trunc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.dash-shell { display: flex; height: 100vh; overflow: hidden; background: var(--background); }
+.dash-shell { display: flex; height: 100vh; height: 100dvh; overflow: hidden; background: var(--background); }
 .dash-side { width: 236px; flex-shrink: 0; display: flex; flex-direction: column; background: var(--sidebar); border-right: 1px solid var(--sidebar-border); }
 .dash-side-hd { display: flex; align-items: center; gap: 9px; height: 56px; padding: 0 14px; border-bottom: 1px solid var(--sidebar-border); }
 .dash-logo { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--primary); color: #fff; font-weight: 700; font-size: 11px; }
@@ -100,13 +100,23 @@
 .dgrid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--card-gap); align-items: stretch; }
 .dc4 { grid-column: span 4; } .dc5 { grid-column: span 5; } .dc6 { grid-column: span 6; } .dc7 { grid-column: span 7; } .dc8 { grid-column: span 8; } .dc12 { grid-column: span 12; }
 @media (max-width: 1180px) { .dc4, .dc5, .dc6, .dc7, .dc8 { grid-column: span 12; } }
-.dcard { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-xs); }
+.dcard { display: flex; flex-direction: column; min-width: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-xs); }
 .dcard-hd { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: var(--card-pad) var(--card-pad) 10px; }
 .dcard-hd h3 { font-size: 14px; font-weight: 600; letter-spacing: -.005em; }
 .dcard-hd p { font-size: 11.5px; color: var(--muted-foreground); margin-top: 1px; }
-.dcard-bd { padding: 0 var(--card-pad) var(--card-pad); flex: 1; display: flex; flex-direction: column; }
+.dcard-bd { padding: 0 var(--card-pad) var(--card-pad); flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .dcard-bd.flush { padding-left: 0; padding-right: 0; }
 
+/* Any table wide enough to overflow scrolls inside its own card rather than
+   stretching the page — the grid track is minmax(0,1fr) so it can't blow out. */
+.dtable-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* KPI strip: auto-fits 4-up on desktop, 2-up on tablets, 1-up on phones with
+   no per-page breakpoints needed. Replaces hardcoded inline `span 3/4`, which
+   media queries could never override. */
+.dkpi-row { grid-column: span 12; display: grid; gap: var(--card-gap);
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-bottom: var(--card-gap); }
+.dkpi { padding: var(--card-pad); }
 .dkpi p.l { font-size: 12.5px; font-weight: 500; color: var(--muted-foreground); }
 .dkpi .v { font-size: 30px; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; margin-top: 4px; }
 .dmeter-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
@@ -192,5 +202,81 @@
 .rot-180 { transform: rotate(180deg); }
 .dbtn.danger { background: var(--destructive); border-color: var(--destructive); color: #fff; }
 .dbtn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Themed replacement for window.confirm/window.alert — never use the browser default. */
+.dconfirm-overlay { position: fixed; inset: 0; z-index: 400; display: flex; align-items: center; justify-content: center;
+  padding: 5vw; background: rgba(20, 15, 10, 0.55); backdrop-filter: blur(3px); animation: dmFade .18s ease both; }
+.dconfirm { width: min(380px, 100%); background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-lg);
+  padding: 26px 22px 20px; text-align: center; animation: dmPop .22s cubic-bezier(.22,1,.36,1) both; }
+.dconfirm-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 14px;
+  background: var(--muted); color: var(--muted-foreground); }
+.dconfirm-icon.danger { background: var(--danger-soft); color: var(--destructive); }
+.dconfirm h3 { font-size: 15.5px; font-weight: 700; margin-bottom: 6px; }
+.dconfirm p { font-size: 13px; color: var(--muted-foreground); line-height: 1.5; margin-bottom: 20px; }
+.dconfirm-actions { display: flex; justify-content: center; gap: 8px; }
+.dconfirm-actions .dbtn { flex: 1; justify-content: center; }
+
+/* ---------- RESPONSIVE ----------
+   The sidebar is a permanent rail on desktop and an off-canvas drawer below
+   900px; `.dash-burger` and `.dash-scrim` only exist in the drawer state. */
+.dash-burger { display: none; }
+.dash-scrim { display: none; }
+
+@media (max-width: 1180px) {
+  .dash-side { width: 208px; }
+  .dash-topbar .sub { display: none; }
+  .dash-topbar h1 { margin-right: auto; }
+}
+
+@media (max-width: 900px) {
+  .dash-burger { display: grid; flex-shrink: 0; }
+  /* The topbar is a flex row; without this the language pills and icon buttons
+     get squeezed below their content and clip mid-label. */
+  .dash-topbar .dtabbar, .dash-topbar .dash-icon-btn { flex-shrink: 0; }
+  .dash-side {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 210;
+    width: min(272px, 82vw);
+    transform: translateX(-100%);
+    transition: transform var(--dur) var(--ease-out);
+    box-shadow: var(--shadow-lg);
+  }
+  .dash-side.open { transform: translateX(0); }
+  .dash-scrim { display: block; position: fixed; inset: 0; z-index: 205;
+    background: rgba(20, 15, 10, .45); backdrop-filter: blur(2px); animation: dmFade .18s ease both; }
+  .dash-topbar { padding: 0 12px; gap: 8px; }
+  .dash-topbar h1 { font-size: 16px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dash-content { padding: 12px 12px 18px; }
+  /* Header actions sit under the title instead of fighting it for width. */
+  .dcard-hd { flex-wrap: wrap; }
+}
+
+@media (max-width: 640px) {
+  .dash-root { --card-pad: .8rem; --card-gap: .6rem; }
+  .dash-topbar { gap: 6px; padding: 0 10px; }
+  .dash-topbar h1 { font-size: 15px; }
+  /* Decorative/duplicated controls — logout also lives in the drawer footer. */
+  .dash-topbar .dash-icon-btn[aria-label="Notifications"] { display: none; }
+  .dash-topbar select { max-width: 116px; }
+  .dash-content { padding: 10px 10px 16px; }
+  .dkpi .v { font-size: 21px; }
+  .dkpi p.l { font-size: 11.5px; }
+  /* Filter controls stretch to fill the row rather than crowding each other. */
+  .dfilterbar { gap: 8px; }
+  .dfilterbar .fgroup { flex: 1 1 132px; min-width: 0; }
+  .dfilterbar .fgroup select, .dfilterbar .fgroup input { width: 100%; }
+  .dfilterbar .dfilter-count { margin-left: 0; flex-basis: 100%; }
+  /* Paired form fields stack — two inputs side by side is unusable this narrow. */
+  .dfield-row { grid-template-columns: 1fr; gap: 0; }
+  .dmodal-overlay, .dconfirm-overlay { padding: 14px; align-items: flex-end; }
+  .dmodal { max-height: 92dvh; }
+  .dconfirm { width: 100%; }
+  .dform-actions .dbtn { flex: 1; justify-content: center; }
+}
+
+/* Below this width the KPI strip is always 1 or 2 columns, so an odd final card
+   would sit alone at half width — let it fill the row instead of dangling. */
+@media (max-width: 540px) {
+  .dkpi-row > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
 
 @media (prefers-reduced-motion: reduce) { .dash-root * { transition-duration: .001ms !important; animation-duration: .001ms !important; } }

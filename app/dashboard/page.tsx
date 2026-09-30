@@ -198,9 +198,9 @@ function DashboardGrid({ data }: { data: DashboardSummary }) {
   return (
     <div className="dgrid">
       {kpis.length > 0 && (
-        <div className="dgrid" style={{ gridColumn: "span 12", marginBottom: "var(--card-gap)" }}>
+        <div className="dkpi-row">
           {kpis.map((k) => (
-            <div key={k.l} className="dcard dc4 dkpi" style={{ padding: "var(--card-pad)" }}>
+            <div key={k.l} className="dcard dkpi">
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
                 <p className="l">{k.l}</p>
                 <span style={{ color: "var(--muted-foreground)" }}><Icon name={k.icon} /></span>
@@ -287,7 +287,7 @@ function JobsTable({ jobs, total }: { jobs: Job[]; total: number }) {
         <button role="tab" aria-selected="false"><Icon name="life" size={14} />{t("dashboard.jobs.tab.support")}</button>
       </div>
       <div className="dcard-bd flush" style={{ paddingTop: 6, paddingBottom: 0 }}>
-        <div style={{ overflowX: "auto" }}>
+        <div className="dtable-wrap">
           <table>
             <thead>
               <tr>
@@ -424,7 +424,7 @@ function StatusPie({ breakdown }: { breakdown: DashboardSummary["job_status_brea
           <path key={s.status} d={s.path} fill={s.color} stroke="var(--card)" strokeWidth={2} />
         ))}
       </svg>
-      <ul style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5px 16px", fontSize: 11.5 }}>
+      <ul style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))", gap: "5px 16px", fontSize: 11.5 }}>
         {slices.map((s) => (
           <li key={s.status} style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ width: 9, height: 9, borderRadius: 3, background: s.color }} />

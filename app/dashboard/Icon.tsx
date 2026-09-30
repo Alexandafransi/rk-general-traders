@@ -149,6 +149,12 @@ const PATHS: Record<string, ReactNode> = {
       <path d="M9 20v-6h6v6" />
     </>
   ),
+  "alert-circle": (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7.5v6M12 16.5h.01" />
+    </>
+  ),
   eye: (
     <>
       <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7-10.5-7-10.5-7z" />
@@ -181,6 +187,7 @@ const PATHS: Record<string, ReactNode> = {
       <path d="M9 12l2 2 4-4" />
     </>
   ),
+  menu: <path d="M4 7h16M4 12h16M4 17h16" />,
 };
 
 export default function Icon({

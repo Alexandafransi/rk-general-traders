@@ -4,6 +4,7 @@ export const authDict = {
     "nav.title.accounts": "Accounts",
     "nav.subtitle.accounts": "Login accounts, roles, and branch access",
     "nav.logout": "Log out",
+    "nav.menu": "Open menu",
     "nav.accessDenied.title": "Access restricted",
     "nav.accessDenied.subtitle": "Your role doesn't have permission to view this page.",
 
@@ -72,6 +73,7 @@ export const authDict = {
     "nav.title.accounts": "Akaunti",
     "nav.subtitle.accounts": "Akaunti za kuingia, majukumu, na ufikiaji wa matawi",
     "nav.logout": "Toka",
+    "nav.menu": "Fungua menyu",
     "nav.accessDenied.title": "Ufikiaji umezuiwa",
     "nav.accessDenied.subtitle": "Jukumu lako halina ruhusa ya kuona ukurasa huu.",
 
