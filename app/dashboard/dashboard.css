@@ -118,7 +118,8 @@
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-bottom: var(--card-gap); }
 .dkpi { padding: var(--card-pad); }
 .dkpi p.l { font-size: 12.5px; font-weight: 500; color: var(--muted-foreground); }
-.dkpi .v { font-size: 30px; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; margin-top: 4px; }
+.dkpi .v { font-size: 30px; font-weight: 700; letter-spacing: -.035em; line-height: 1.2; margin-top: 4px;
+  font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
 .dmeter-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
 .dmeter { height: 6px; border-radius: 99px; background: var(--muted); overflow: hidden; flex: 1; }
 .dmeter > i { display: block; height: 100%; border-radius: 99px; }
