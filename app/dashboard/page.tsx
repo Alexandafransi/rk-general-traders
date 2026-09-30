@@ -8,7 +8,7 @@ import { useLocale } from "./i18n/LocaleContext";
 import { apiFetch } from "../lib/auth/apiFetch";
 import type { DashboardSummary, DashboardTrends, Job, Todo } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 const STATUS_BADGE: Record<string, string> = {
   not_started: "neutral",

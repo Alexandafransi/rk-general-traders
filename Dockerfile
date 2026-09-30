@@ -9,7 +9,14 @@ RUN npm ci
 
 FROM base AS builder
 WORKDIR /app
-ARG NEXT_PUBLIC_API_URL=http://localhost:8010
+# Empty by design (single-origin: the browser fetches relative /api paths,
+# proxied server-side to BACKEND_INTERNAL_URL below). A non-empty default
+# here would bake an absolute dev-only address into every production
+# bundle if a build-arg override is ever dropped — found live 2026-09-30:
+# CI passed NEXT_PUBLIC_API_URL="" but the shipped image still had
+# "http://localhost:8010" baked in, breaking every page's data fetch in
+# production. Override locally via docker-compose or .env.local, never here.
+ARG NEXT_PUBLIC_API_URL=
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 # Rewrite destinations are compiled into the routes manifest AT BUILD TIME,
 # so the proxy target must be baked here — the runtime env is too late.

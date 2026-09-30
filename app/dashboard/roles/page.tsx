@@ -9,7 +9,7 @@ import { apiFetch } from "../../lib/auth/apiFetch";
 import { useAuth } from "../../lib/auth/AuthContext";
 import { ALLOWED_MODULES } from "../../lib/auth/permissions";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 const MODULE_LABEL_KEYS: Record<string, string> = {
   dashboard: "nav.item.dashboard",

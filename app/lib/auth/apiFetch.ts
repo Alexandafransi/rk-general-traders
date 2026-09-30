@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const ACCESS_TOKEN_KEY = "rkgt-access-token";
 export const REFRESH_TOKEN_KEY = "rkgt-refresh-token";

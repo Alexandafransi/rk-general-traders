@@ -10,7 +10,7 @@ import { apiFetch } from "../../lib/auth/apiFetch";
 import { useAuth } from "../../lib/auth/AuthContext";
 import { assignableRoles } from "../../lib/auth/permissions";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 function roleBadgeVariant(role: RoleKey) {
   if (role === "superadmin") return "danger";

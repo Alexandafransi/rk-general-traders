@@ -7,7 +7,7 @@ import { useBranch } from "../branch/BranchContext";
 import { apiFetch } from "../../lib/auth/apiFetch";
 import type { AuditLogPage } from "../types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 const MODEL_NAMES = [
   "Session", "Branch", "Technician", "Account", "Role", "Lead", "Job", "Todo", "Payslip",

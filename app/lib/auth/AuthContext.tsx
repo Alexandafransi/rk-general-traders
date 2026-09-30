@@ -5,7 +5,7 @@ import type { AuthUser, RoleDef, RoleKey } from "../../dashboard/types";
 import { apiFetch, clearTokens, getAccessToken, setTokens } from "./apiFetch";
 import { buildRoleModulesMap, canAccessModule } from "./permissions";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 type LoginResult = { ok: true } | { ok: false; error: string };
 

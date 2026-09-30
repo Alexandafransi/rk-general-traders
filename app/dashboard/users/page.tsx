@@ -8,7 +8,7 @@ import { apiFetch } from "../../lib/auth/apiFetch";
 import { useAuth } from "../../lib/auth/AuthContext";
 import type { RoleDef, Technician, UsersSummary } from "../types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 function initialsColor(tint: number) {
   const n = ((tint - 1) % 6) + 1;

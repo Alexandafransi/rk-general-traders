@@ -9,7 +9,7 @@ import { apiFetch } from "../../lib/auth/apiFetch";
 import { useAuth } from "../../lib/auth/AuthContext";
 import type { Branch, Category, Product, Purchase, PurchasesSummary, Supplier } from "../types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 const STATUS_BADGE: Record<string, string> = { ordered: "info", received: "success", cancelled: "danger" };
 

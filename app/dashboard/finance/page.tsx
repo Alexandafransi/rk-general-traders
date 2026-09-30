@@ -7,7 +7,7 @@ import { useLocale } from "../i18n/LocaleContext";
 import type { FinanceSummary } from "../types";
 import { apiFetch } from "../../lib/auth/apiFetch";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 const BREAKDOWN_COLOR: Record<string, string> = {
   Payroll: "var(--chart-5)",

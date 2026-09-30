@@ -8,7 +8,7 @@ import { useBranch } from "../branch/BranchContext";
 import type { Branch, Category, InventorySummary, Product, StockMovement } from "../types";
 import { apiFetch } from "../../lib/auth/apiFetch";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 function formatDateTime(iso: string) {
   const d = new Date(iso);

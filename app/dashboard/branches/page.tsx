@@ -8,7 +8,7 @@ import { useLocale } from "../i18n/LocaleContext";
 import { apiFetch } from "../../lib/auth/apiFetch";
 import type { Branch } from "../types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 type BranchForm = {
   name: string;

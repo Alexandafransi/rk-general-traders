@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { Branch } from "../types";
 import { apiFetch } from "../../lib/auth/apiFetch";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const STORAGE_KEY = "rkgt-dashboard-branch";
 
 type BranchContextValue = {
