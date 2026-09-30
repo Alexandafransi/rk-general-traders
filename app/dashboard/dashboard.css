@@ -110,6 +110,12 @@
 /* Any table wide enough to overflow scrolls inside its own card rather than
    stretching the page — the grid track is minmax(0,1fr) so it can't blow out. */
 .dtable-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* A table wider than its card is common on phones — a plain hard edge
+   made the cutoff look like missing/broken content rather than "more
+   columns, scroll right". This inset shadow is a standing, CSS-only cue
+   (no JS scroll-position tracking needed); harmless on a table that
+   already fits, since there's then nothing under it to shadow. */
+.dtable-wrap { box-shadow: inset -10px 0 8px -8px rgba(20, 15, 10, .12); }
 
 /* KPI strip: auto-fits 4-up on desktop, 2-up on tablets, 1-up on phones with
    no per-page breakpoints needed. Replaces hardcoded inline `span 3/4`, which
@@ -140,13 +146,26 @@
 .dfilterbar select:focus, .dfilterbar input:focus { outline: none; box-shadow: 0 0 0 3px var(--ring); border-color: var(--primary); }
 .dfilterbar .dfilter-clear { align-self: flex-end; font-size: 11.5px; color: var(--primary); font-weight: 600; height: 30px; padding: 0 4px; }
 .dfilterbar .dfilter-count { margin-left: auto; align-self: flex-end; font-size: 11.5px; color: var(--muted-foreground); padding-bottom: 6px; }
-.dash-root table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+/* min-width (not width): 100% keeps a short table stretched to fill its
+   card, but a wide one — several nowrap money/date/status columns plus a
+   free-text column — is now free to grow past the card and let
+   .dtable-wrap's horizontal scroll take over. With a hard width:100%,
+   auto table layout instead squeezed the free-text column down to a
+   sliver, word-wrapping it one word per line ("TP-" / "Link" / "Archer" /
+   "C6" / "Router" each on their own row) — every row's real content was
+   technically present but unreadable at a glance. */
+.dash-root table { min-width: 100%; width: max-content; border-collapse: collapse; font-size: 12.5px; }
 .dash-root th { padding: 9px var(--card-pad); text-align: left; font-weight: 500; color: var(--muted-foreground); border-bottom: 1px solid var(--border); white-space: nowrap; }
 .dash-root td { padding: 10px var(--card-pad); border-bottom: 1px solid color-mix(in oklch, var(--border) 65%, transparent); }
 .dash-root tbody tr:last-child td { border-bottom: none; }
 .dash-root tbody tr:hover { background: color-mix(in oklch, var(--muted) 70%, transparent); }
 .dash-root th.num, .dash-root td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .dash-root td.nw { white-space: nowrap; }
+/* Caps how wide one long free-text cell (a description, an address) can
+   push the now-growable table — wraps normally within the cap instead of
+   the previous near-zero-width, one-word-per-line squeeze. nw/num cells
+   (amounts, dates, status, badges) are short by nature and excluded. */
+.dash-root td:not(.nw):not(.num) { max-width: 240px; overflow-wrap: break-word; }
 .dchk { width: 14px; height: 14px; border: 1.5px solid var(--input); border-radius: 4px; display: grid; place-items: center; color: transparent; flex-shrink: 0; }
 .dchk.on { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
 .dbadge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; }

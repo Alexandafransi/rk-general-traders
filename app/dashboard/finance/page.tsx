@@ -91,9 +91,9 @@ export default function FinancePage() {
 
   return (
     <div className="dgrid">
-      <div className="dgrid" style={{ gridColumn: "span 12", marginBottom: "var(--card-gap)" }}>
+      <div className="dkpi-row">
         {headline.map((k) => (
-          <div key={k.l} className="dcard dkpi" style={{ padding: "var(--card-pad)", gridColumn: "span 4" }}>
+          <div key={k.l} className="dcard dkpi">
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
               <p className="l">{k.l}</p>
               <span style={{ color: "var(--muted-foreground)" }}><Icon name={k.icon} /></span>
@@ -103,9 +103,9 @@ export default function FinancePage() {
         ))}
       </div>
 
-      <div className="dgrid" style={{ gridColumn: "span 12", marginBottom: "var(--card-gap)" }}>
+      <div className="dkpi-row">
         {costKpis.map((k) => (
-          <div key={k.l} className="dcard dkpi" style={{ padding: "var(--card-pad)", gridColumn: "span 4" }}>
+          <div key={k.l} className="dcard dkpi">
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
               <p className="l">{k.l}</p>
               <span style={{ color: "var(--muted-foreground)" }}><Icon name={k.icon} /></span>

@@ -145,9 +145,9 @@ export default function ExpensesPage() {
 
   return (
     <div className="dgrid">
-      <div className="dgrid" style={{ gridColumn: "span 12", marginBottom: "var(--card-gap)" }}>
+      <div className="dkpi-row">
         {kpis.map((k) => (
-          <div key={k.l} className="dcard dkpi" style={{ padding: "var(--card-pad)", gridColumn: "span 3" }}>
+          <div key={k.l} className="dcard dkpi">
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
               <p className="l">{k.l}</p>
               <span style={{ color: "var(--muted-foreground)" }}><Icon name={k.icon} /></span>
